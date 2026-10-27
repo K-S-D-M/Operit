@@ -169,7 +169,7 @@ class AIForegroundService : Service() {
             }
             return PendingIntent.getActivity(
                 context,
-                0,
+                chatId?.hashCode() ?: 0,
                 intent,
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT

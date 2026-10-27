@@ -168,7 +168,7 @@ open class StandardSystemOperationTools(private val context: Context) {
                 }
                 PendingIntent.getActivity(
                     context,
-                    0,
+                    chatId.hashCode(),
                     launchIntent,
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT

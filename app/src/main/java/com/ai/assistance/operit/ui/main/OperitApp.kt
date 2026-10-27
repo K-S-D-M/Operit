@@ -244,10 +244,20 @@ fun OperitApp(
             return@LaunchedEffect
         }
         lastHandledChatOpenRequestId = chatOpenRequestId
+        val chatHistoryManager = ChatHistoryManager.getInstance(context)
+        val chatExists = runCatching { chatHistoryManager.chatExists(requestChatId) }
+            .getOrDefault(false)
+        if (!chatExists) {
+            AppLogger.w(TAG, "Ignored chat open request for missing chatId=$requestChatId")
+            onChatOpenHandled(chatOpenRequestId)
+            return@LaunchedEffect
+        }
         runCatching {
-            ChatHistoryManager.getInstance(context).setCurrentChatId(requestChatId)
+            chatHistoryManager.setCurrentChatId(requestChatId)
         }.onFailure { e ->
             AppLogger.e(TAG, "Failed to open chat from notification: ${e.message}", e)
+            onChatOpenHandled(chatOpenRequestId)
+            return@LaunchedEffect
         }
         requestRouteTransition {
             isNavigatingBack = false

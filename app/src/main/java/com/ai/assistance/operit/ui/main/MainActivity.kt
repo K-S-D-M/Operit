@@ -109,6 +109,7 @@ class MainActivity : ComponentActivity() {
     private var pendingRouteRequestId by mutableStateOf(0L)
     private var pendingOpenChatId by mutableStateOf<String?>(null)
     private var pendingOpenChatRequestId by mutableStateOf(0L)
+    private var nextChatOpenRequestId = 0L
 
     // 通知权限请求启动器
     private val notificationPermissionLauncher = registerForActivityResult(
@@ -268,7 +269,7 @@ class MainActivity : ComponentActivity() {
         val openChatId = intent?.getStringExtra(EXTRA_OPEN_CHAT_ID)?.trim().orEmpty()
         if (openChatId.isNotBlank()) {
             pendingOpenChatId = openChatId
-            pendingOpenChatRequestId = System.currentTimeMillis()
+            pendingOpenChatRequestId = ++nextChatOpenRequestId
             AppLogger.d(TAG, "Notification requested opening chat: $openChatId")
             return true
         }
