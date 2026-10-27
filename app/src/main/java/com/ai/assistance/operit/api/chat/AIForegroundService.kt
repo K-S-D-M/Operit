@@ -157,12 +157,15 @@ class AIForegroundService : Service() {
             return "$REPLY_NOTIFICATION_TAG_PREFIX$suffix"
         }
 
-        private fun createMainActivityPendingIntent(context: Context): PendingIntent {
+        private fun createMainActivityPendingIntent(context: Context, chatId: String?): PendingIntent {
             val intent = Intent(context, MainActivity::class.java).apply {
                 flags =
                     Intent.FLAG_ACTIVITY_NEW_TASK or
                         Intent.FLAG_ACTIVITY_CLEAR_TOP or
                         Intent.FLAG_ACTIVITY_SINGLE_TOP
+                if (!chatId.isNullOrBlank()) {
+                    putExtra(MainActivity.EXTRA_OPEN_CHAT_ID, chatId)
+                }
             }
             return PendingIntent.getActivity(
                 context,
@@ -351,7 +354,7 @@ class AIForegroundService : Service() {
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setDefaults(notificationDefaults)
                         .setCategory(NotificationCompat.CATEGORY_STATUS)
-                        .setContentIntent(createMainActivityPendingIntent(appContext))
+                        .setContentIntent(createMainActivityPendingIntent(appContext, chatId))
                         .setAutoCancel(true)
 
                 if (cleanedReplyContent.isNotEmpty()) {
